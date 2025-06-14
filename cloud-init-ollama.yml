@@ -1,0 +1,60 @@
+#cloud-config
+package_update: true
+packages:
+  - curl
+
+write_files:
+  - path: /etc/systemd/system/ollama.service
+    content: |
+      [Unit]
+      Description=Ollama Model Server
+      After=network.target
+
+      [Service]
+      Environment=HOME=/home/azureuser
+      ExecStart=/usr/bin/ollama serve
+      Restart=always
+      RestartSec=3
+      User=azureuser
+      WorkingDirectory=/home/azureuser
+
+      [Install]
+      WantedBy=multi-user.target
+
+runcmd:
+  - echo "Installing Ollama..."
+  - curl -fsSL https://ollama.com/install.sh | sh
+
+  - echo "Creating systemd service for Ollama..."
+  - systemctl daemon-reexec
+  - systemctl daemon-reload
+  - systemctl enable ollama
+  - systemctl start ollama
+
+  - echo "Waiting for Ollama process to be running..."
+  - |
+    for i in $(seq 1 30); do
+      if pgrep -x ollama > /dev/null; then
+        echo "Ollama is running."
+        break
+      fi
+      echo "Waiting for Ollama to start..."
+      sleep 2
+    done
+
+  - echo "Waiting for Ollama API to be available..."
+  - |
+    for i in $(seq 1 30); do
+      if curl -s http://localhost:11434 > /dev/null; then
+        echo "Ollama API is up."
+        break
+      fi
+      echo "Waiting for Ollama API..."
+      sleep 2
+    done
+
+  - echo "Pulling qwen2.5-coder:latest..."
+  - runuser -l azureuser -c 'HOME=/home/azureuser ollama pull qwen2.5-coder:latest > /home/azureuser/ollama-pull-qwen.log 2>&1'
+
+  - echo "Pulling codellama:7b-code..."
+  - runuser -l azureuser -c 'HOME=/home/azureuser ollama pull codellama:7b-code > /home/azureuser/ollama-pull-codellama.log 2>&1'

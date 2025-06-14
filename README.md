@@ -17,3 +17,22 @@ Point local `21434` to `11434` on the VM.
 
 ## Brows logs
 `tail -f /var/log/cloud-init-output.log`
+
+# Configure Continue plugin
+In `~/.continue/config.json` set following models
+```json
+  "models": [
+    {
+      "title": "qwen2.5-coder",
+      "provider": "ollama",
+      "model": "qwen2.5-coder:latest",
+      "apiBase": "http://localhost:21434"
+    },
+    {
+      "title": "codellama:7b-code",
+      "provider": "ollama",
+      "model": "codellama:7b-code",
+      "apiBase": "http://localhost:21434"
+    }
+  ]
+```

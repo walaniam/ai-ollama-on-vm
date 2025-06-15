@@ -12,7 +12,7 @@ write_files:
 
       [Service]
       Environment=HOME=/home/azureuser
-      ExecStart=/usr/bin/ollama serve
+      ExecStart=/usr/bin/ollama serve --threads $(nproc --ignore=2)
       Restart=always
       RestartSec=3
       User=azureuser
@@ -53,8 +53,8 @@ runcmd:
       sleep 2
     done
 
-  - echo "Pulling qwen2.5-coder:latest..."
-  - runuser -l azureuser -c 'HOME=/home/azureuser ollama pull qwen2.5-coder:latest > /home/azureuser/ollama-pull-qwen.log 2>&1'
+  - echo "Pulling codellama:13b-code-q4_K_M..."
+  - runuser -l azureuser -c 'HOME=/home/azureuser ollama pull codellama:13b-code-q4_K_M > /home/azureuser/ollama-pull-codellama-code.log 2>&1'
 
-  - echo "Pulling codellama:7b-code..."
-  - runuser -l azureuser -c 'HOME=/home/azureuser ollama pull codellama:7b-code > /home/azureuser/ollama-pull-codellama.log 2>&1'
+  - echo "Pulling codellama:13b-instruct-q4_K_M..."
+  - runuser -l azureuser -c 'HOME=/home/azureuser ollama pull codellama:13b-instruct-q4_K_M > /home/azureuser/ollama-pull-codellama-instruct.log 2>&1'

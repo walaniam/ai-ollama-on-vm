@@ -17,23 +17,28 @@ To destroy environment when no longer needed run `terraform destroy`.
 Point local `21434` to `11434` on the VM.  
 `ssh -L 21434:localhost:11434 azureuser@<vm-public-ip>`
 
-## Browse logs
+## Browse logs and system usage
+### Init log
 `tail -f /var/log/cloud-init-output.log`
+### Ollama service log
+`journalctl -u ollama.service -f`
+### CPU usage
+`htop`
 
 # Configure Continue plugin
 In `~/.continue/config.json` set following models
 ```json
   "models": [
-    {
-      "title": "qwen2.5-coder",
+          {
+      "title": "codellama:13b-instruct-q4_K_M",
       "provider": "ollama",
-      "model": "qwen2.5-coder:latest",
+      "model": "codellama:13b-instruct-q4_K_M",
       "apiBase": "http://localhost:21434"
     },
-    {
-      "title": "codellama:7b-code",
+	    {
+      "title": "codellama:13b-code-q4_K_M",
       "provider": "ollama",
-      "model": "codellama:7b-code",
+      "model": "codellama:13b-code-q4_K_M",
       "apiBase": "http://localhost:21434"
     }
   ]

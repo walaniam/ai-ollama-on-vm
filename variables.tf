@@ -1,6 +1,5 @@
 # export TF_VAR_azure_subscription_id=
 # export TF_VAR_azure_tenant_id=
-# export TF_VAR_notification_alert_email=
 
 variable "azure_subscription_id" {
   type = string
@@ -14,7 +13,12 @@ variable "resource_group_name" {
   type = string
 }
 
+variable "location" {
+  type    = string
+  default = "Sweden Central"
+}
+
 variable "vm_size" {
   type    = string
-  default = "Standard_NV4as_v4"
+  default = "Standard_D8as_v5"
 }
